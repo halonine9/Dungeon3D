@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rigidbody;
 
+    private float camLook;
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -50,11 +51,11 @@ public class PlayerController : MonoBehaviour
 
     void CameraLook()
     {
-        camCurXRot += mouseDelta.y * lookSensitivity;
+        camLook += mouseDelta.x * lookSensitivity;
+        camCurXRot -= mouseDelta.y * lookSensitivity;
         camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
-        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
 
-        transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
+        cameraContainer.rotation = Quaternion.Euler(camCurXRot, camLook, 0f);
     }
     
     public void OnLookInput(InputAction.CallbackContext context)
@@ -64,11 +65,21 @@ public class PlayerController : MonoBehaviour
     
     private void Move()
     {
-        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
-        dir *= moveSpeed;
-        dir.y = rigidbody.velocity.y;
+        Vector3 dir = new Vector3(curMovementInput.x, 0, curMovementInput.y);
+        dir = cameraContainer.transform.rotation * dir;
+        dir.y = 0f;
+        dir.Normalize();
 
-        rigidbody.velocity = dir;
+        Vector3 velocity = dir * moveSpeed;
+        velocity.y = rigidbody.velocity.y;
+
+        rigidbody.velocity = velocity;
+        
+        if (dir != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
     }
 
     public void OnMoveInput(InputAction.CallbackContext context)
