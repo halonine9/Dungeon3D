@@ -17,18 +17,18 @@ public class PlayerController : MonoBehaviour
     public float maxXLook;
     private float camCurXRot;
     public float lookSensitivity;
-
-    private Vector2 mouseDelta;
-
+    
     [HideInInspector]
     public bool canLook = true;
 
     private Rigidbody rigidbody;
-
     private float camLook;
+    [SerializeField] private AnimationHandler anim;
+    private Vector2 mouseDelta;
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
+        anim = GetComponent<AnimationHandler>();
     }
 
     void Start()
@@ -39,8 +39,16 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        
+        Vector3 horizontalVelocity = rigidbody.velocity;
+        horizontalVelocity.y = 0f;
+        bool isMoving = horizontalVelocity.magnitude > 0.1f;
+        
+        bool grounded = IsGrounded();
+        anim.SetisMove(isMoving && grounded);
+        anim.SetisGrounded(grounded);
     }
-
+    
     private void LateUpdate()
     {
         if (canLook)
@@ -99,6 +107,7 @@ public class PlayerController : MonoBehaviour
         if(context.phase == InputActionPhase.Started && IsGrounded())
         {
             rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+            anim.SetisJumping(true);
         }
     }
     

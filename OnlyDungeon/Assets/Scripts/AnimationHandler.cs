@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class AnimationHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Animator animator;
+
+    private void Awake()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetisMove(bool isMoving)
     {
-        
+        animator.SetBool("isMove", isMoving);
     }
+
+    public void SetisJumping(bool isJumping)
+    {
+        animator.SetBool("isJumping", isJumping);
+    }
+    
+    public void SetisGrounded(bool isGrounded)
+    {
+        animator.SetBool("isGrounded", isGrounded);
+    }
+
 }
