@@ -2,9 +2,10 @@ using UnityEngine;
 
 namespace Item
 {
-    public class SprintEffect : ItemEffect
+    [CreateAssetMenu(menuName = "Effects/JumpUP")]
+    public class JumpUPEffect : ItemEffect
     {
-        public float speedUP= 1.5f;
+        public float jumpfower = 1.5f;
         public float duration = 5f;
 
         public override void Apply(GameObject target)
@@ -12,7 +13,7 @@ namespace Item
             PlayerEffectHandler handler = target.GetComponent<PlayerEffectHandler>();
             if (handler != null)
             {
-                handler.ApplySprint(speedUP, duration);
+                handler.ApplyJumpUP(jumpfower, duration);
             }
         }
     }

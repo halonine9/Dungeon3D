@@ -1,3 +1,4 @@
+using Item;
 using UnityEngine;
 
 namespace UI
@@ -6,8 +7,8 @@ namespace UI
     {
         [SerializeField] private string name;
         [SerializeField] private string description;
-
-        public string GetName() => name;
-        public string GetDescription() => description;
+        [SerializeField] private ItemData itemData;
+        public string GetName() => itemData != null ? itemData.itemName : name;
+        public string GetDescription() => itemData != null ? itemData.description : description;
     }
 }

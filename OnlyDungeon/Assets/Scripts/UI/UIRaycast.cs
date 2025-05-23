@@ -5,7 +5,7 @@ namespace UI
 {
     public class UIRaycast : MonoBehaviour
     {
-        public float inspectDistance = 5f;
+        public float inspectDistance = 10f;
         public LayerMask layerMask;
         [SerializeField] private Camera playerCamera;
 
